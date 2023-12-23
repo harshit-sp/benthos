@@ -179,7 +179,7 @@ generate:
 	require.NoError(t, err)
 
 	exp := []string{
-		` mapping: root = "foo"`,
+		` mapping: 'root = "foo"'`,
 		`level: warn`,
 	}
 
@@ -519,7 +519,6 @@ drop: {}
 		`input:
     label: ""
     broker:
-        copies: 1
         inputs:`,
 		`            - label: foo
               generate:`,
@@ -528,8 +527,6 @@ drop: {}
 		`output:
     label: ""
     broker:
-        copies: 1
-        pattern: fan_out
         outputs:`,
 		`            - label: baz
               drop:`,
@@ -737,7 +734,7 @@ pipeline:
       label: fooproc
 
 output:
-  reject: "lol nah"
+  reject: lol nah
 `,
 			output: []walkedComponent{
 				{
@@ -745,10 +742,7 @@ output:
 					name:    "generate",
 					conf: `label: ""
 generate:
-    mapping: root = deleted()
-    interval: 1s
-    count: 0
-    batch_size: 1`,
+    mapping: 'root = deleted()'`,
 				},
 				{
 					typeStr: "buffer",
@@ -791,7 +785,7 @@ input:
     - mutation: 'root = "hm"'
 
 output:
-  reject: "lol nah"
+  reject: lol nah
   processors:
     - mutation: 'root = "eh"'
 `,
@@ -801,10 +795,7 @@ output:
 					name:    "generate",
 					conf: `label: ""
 generate:
-    mapping: root = deleted()
-    interval: 1s
-    count: 0
-    batch_size: 1
+    mapping: 'root = deleted()'
 processors:
     - label: ""
       mutation: 'root = "hm"'`,
@@ -866,16 +857,13 @@ input:
 dynamic:
     inputs:
         foo:
-            label: ""
             file:
-                paths: [aaa.txt]
-    prefix: ""`,
+                paths: [aaa.txt]`,
 				},
 				{
 					typeStr: "input",
 					name:    "file",
-					conf: `label: ""
-file:
+					conf: `file:
     paths: [aaa.txt]`,
 				},
 				{
