@@ -26,8 +26,15 @@ func extractConfig(
 	componentName string,
 	pluginConfig, componentConfig any,
 ) (*ParsedConfig, error) {
+	// All nested fields are under the namespace of the component type, and
+	// therefore we need to namespace the manager such that metrics and logs
+	// from nested core component types are corrected labelled.
+	if nm != nil {
+		nm = nm.IntoPath(componentName)
+	}
+
 	if pluginConfig != nil {
-		return spec.configFromNode(nm, pluginConfig.(*yaml.Node))
+		return spec.configFromAny(nm, pluginConfig)
 	}
 
 	// TODO: V4 We won't need the below fallback once it's not possible to
